@@ -375,4 +375,34 @@
     return nil;
 }
 
+#pragma mark -
+- (NSDate *) timestamp
+{
+    if(!_timestamp)
+        self.timestamp = [NSDate new];
+    return _timestamp;
+}
+
+- (NSString *) nonce
+{
+    if(!_nonce)
+        self.nonce = [self _generateNonce];
+    return _nonce;
+}
+
+- (NSString *) _generateNonce
+{
+    size_t count = 64;
+    uint8_t randomBytes[count];
+    SecRandomCopyBytes(kSecRandomDefault, count, randomBytes);
+    
+    NSData* randData = [NSData dataWithBytes:randomBytes length:count];
+    NSString* ret = [randData base64EncodedStringWithOptions:0];
+    
+    ret = [ret stringByReplacingOccurrencesOfString:@"=" withString:@""];
+    ret = [ret stringByReplacingOccurrencesOfString:@"+" withString:@"-"];
+    ret = [ret stringByReplacingOccurrencesOfString:@"/" withString:@"_"];
+
+    return ret;
+}
 @end
