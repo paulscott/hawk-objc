@@ -139,11 +139,16 @@
 
 - (NSString *)requestHeader
 {
+    return [NSString stringWithFormat:@"Authorization: %@", [self requestHeaderValue]];
+}
+
+- (NSString *)requestHeaderValue
+{
     NSMutableString* header = [NSMutableString string];
-
+    
     // id
-    [header appendString:[NSString stringWithFormat:@"Authorization: Hawk id=\"%@\"", self.credentials.hawkId]];
-
+    [header appendString:[NSString stringWithFormat:@"Hawk id=\"%@\"", self.credentials.hawkId]];
+    
     // mac
     [header appendString:[NSString stringWithFormat:@", mac=\"%@\"", [self hmacWithType:HawkAuthTypeHeader]]];
 
