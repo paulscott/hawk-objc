@@ -8,6 +8,7 @@
 
 #import <XCTest/XCTest.h>
 #import "HawkAuth.h"
+#import "NSString+Base64.h"
 
 @interface HawkCryptoTests : XCTestCase
 @end
@@ -152,6 +153,18 @@
     actualMac = [auth hmacWithType:HawkAuthTypeHeader];
 
     XCTAssertEqualObjects(actualMac, expectedMac);
+}
+
+- (void) testHmac
+{
+    NSString* key = @"a secret";
+    NSString* dataString = @"some data";
+
+    CryptoProxy* crypto = [CryptoProxy cryptoProxyWithAlgorithm:CryptoAlgorithmSHA256];
+    NSString* hmac = [crypto hmacFromString:dataString withKey:key];
+    NSString* expected = @"8dnkOM2lfD4Mo7SGjOunDCf8QqnljRZWGPP1ThT2cPQ=";
+    
+    XCTAssertEqualObjects(hmac, expected);
 }
 
 - (void)timestampSkewMac
